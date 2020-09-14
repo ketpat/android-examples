@@ -12,8 +12,8 @@ repositories {
 android {
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 21
-        compileSdkVersion 21
+        targetSdkVersion 19
+        compileSdkVersion 27
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     packagingOptions {

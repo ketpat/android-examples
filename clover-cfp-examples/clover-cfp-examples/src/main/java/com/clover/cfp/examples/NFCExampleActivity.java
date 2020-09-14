@@ -16,10 +16,6 @@
 
 package com.clover.cfp.examples;
 
-import com.clover.cfp.examples.R;
-import com.clover.cfp.activity.CloverCFPActivity;
-
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -31,11 +27,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import com.google.gson.Gson;
+import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import com.clover.cfp.activity.CloverCFPActivity;
 
 public class NFCExampleActivity extends CloverCFPActivity {
 
@@ -108,21 +102,22 @@ public class NFCExampleActivity extends CloverCFPActivity {
     super.onResume();
     Log.d(TAG, "In onResume");
     if (mAdapter != null) {
-      if (!mAdapter.isEnabled()) {
+/*      if (!mAdapter.isEnabled()) {
         Log.e(TAG, "NFC not enabled");
         setResultAndFinish(RESULT_CANCELED, "NFC not enabled");
-      }
+      }*/
       mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
-      mDialog.show();
+      if(mDialog != null) mDialog.show();
     }
   }
 
   @Override
   protected void onPause() {
     super.onPause();
+    mDialog.dismiss();
+
     if (mAdapter != null) {
       mAdapter.disableForegroundDispatch(this);
-      mDialog.hide();
     }
   }
 
@@ -132,8 +127,14 @@ public class NFCExampleActivity extends CloverCFPActivity {
       Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
       if (tag != null) {
         String serialNumber = getHex(tag.getId());
-        setResultAndFinish(RESULT_OK, serialNumber);
+        Toast.makeText(this, "Serial: " + serialNumber, Toast.LENGTH_LONG).show();
+        //setResultAndFinish(RESULT_OK, serialNumber);
+      }else{
+        Toast.makeText(this, "Tag was null", Toast.LENGTH_LONG).show();
       }
+    }
+    else{
+      Toast.makeText(this, "Some other resolve Intent call", Toast.LENGTH_LONG).show();
     }
   }
 
