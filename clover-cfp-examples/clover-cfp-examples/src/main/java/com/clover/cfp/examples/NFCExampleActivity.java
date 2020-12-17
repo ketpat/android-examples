@@ -17,9 +17,7 @@
 package com.clover.cfp.examples;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -35,7 +33,6 @@ public class NFCExampleActivity extends CloverCFPActivity {
 
   private NfcAdapter mAdapter;
   private PendingIntent mPendingIntent;
-  private AlertDialog mDialog;
 
   private String TAG = "NFCExampleActivity";
 
@@ -66,23 +63,8 @@ public class NFCExampleActivity extends CloverCFPActivity {
     ImageView image = new ImageView(this);
     image.setImageResource(R.drawable.nfc_sign_48);
 
-    AlertDialog.Builder builder =
-        new AlertDialog.Builder(this).
-            setMessage(R.string.intro_message).
-            setCancelable(false).
-            setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                setResultAndFinish(RESULT_CANCELED, "CANCELED");
-              }
-            }).
-            setView(image);
-    mDialog = builder.create();
-
     mAdapter = NfcAdapter.getDefaultAdapter(this);
     if (mAdapter == null) {
-      showMessage(R.string.error, R.string.no_nfc);
       setResultAndFinish(Activity.RESULT_CANCELED, getText(R.string.no_nfc).toString());
       return;
     }
@@ -102,19 +84,13 @@ public class NFCExampleActivity extends CloverCFPActivity {
     super.onResume();
     Log.d(TAG, "In onResume");
     if (mAdapter != null) {
-/*      if (!mAdapter.isEnabled()) {
-        Log.e(TAG, "NFC not enabled");
-        setResultAndFinish(RESULT_CANCELED, "NFC not enabled");
-      }*/
       mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
-      if(mDialog != null) mDialog.show();
     }
   }
 
   @Override
   protected void onPause() {
     super.onPause();
-    mDialog.dismiss();
 
     if (mAdapter != null) {
       mAdapter.disableForegroundDispatch(this);
@@ -128,7 +104,7 @@ public class NFCExampleActivity extends CloverCFPActivity {
       if (tag != null) {
         String serialNumber = getHex(tag.getId());
         Toast.makeText(this, "Serial: " + serialNumber, Toast.LENGTH_LONG).show();
-        //setResultAndFinish(RESULT_OK, serialNumber);
+        startActivity(new Intent(this, NFCExampleResultActivity.class));
       }else{
         Toast.makeText(this, "Tag was null", Toast.LENGTH_LONG).show();
       }
@@ -143,12 +119,6 @@ public class NFCExampleActivity extends CloverCFPActivity {
     Log.d(TAG, "In onNewIntent");
     setIntent(intent);
     resolveIntent(intent);
-  }
-
-  public void showMessage(int title, int message) {
-    mDialog.setTitle(title);
-    mDialog.setMessage(getText(message));
-    mDialog.show();
   }
 
   public void setSystemUiVisibility() {

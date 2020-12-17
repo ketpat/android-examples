@@ -26,6 +26,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     compile "com.clover.cfp:clover-cfp-sdk:1.0"
     compile "com.google.guava:guava:20.0"
     compile "com.clover:clover-remote-interface:217.10"
