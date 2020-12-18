@@ -18,6 +18,8 @@ package com.clover.cfp.examples;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -113,6 +115,7 @@ public class NFCExampleActivity extends CloverCFPActivity {
       Toast.makeText(this, "Some other resolve Intent call", Toast.LENGTH_LONG).show();
     }
   }
+
 
   @Override
   public void onNewIntent(Intent intent) {
